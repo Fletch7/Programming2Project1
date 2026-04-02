@@ -14,21 +14,21 @@ public class Seeder
 		ListOfCourses();
 	}
 	
-	private void SeedInstitutions()
+	public static List<Institution> SeedInstitutions()
 	{
 		Institutions.Add(new Institution("Otago Polytech", "Otago", "New Zealand"));
         Institutions.Add(new Institution("Victoria University", "Wellington", "New Zealand"));
         Institutions.Add(new Institution("Auckland University of Technology", "Auckland", "New Zealand"));
     }
 
-	private void SeedDepartments()
+	public static List<Department> SeedDepartments()
 	{
 		Departments.Add(new Department("Information Technology", 1, Institutions[0]));
 		Departments.Add(new Department("Maths", 2, Institutions[1]));
 		Departments.Add(new Department("Business", 3, Institutions[2]));
     }
 
-	private void SeedCourses()
+	public static List<Courses> SeedCourses()
 	{
 		Courses.Add(new Courses("ID511001", "Programming 2", "Makes the windows form", 1000, 799.99, Courses[0]));
 		Courses.Add(new Courses("B22141", "Business 101", "Learn to make the business", 1000, 999.99, Courses[0]));
