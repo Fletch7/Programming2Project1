@@ -1,5 +1,4 @@
 namespace Programming2Project1;
-
 static class Program
 {
     /// <summary>

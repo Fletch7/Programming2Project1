@@ -1,8 +1,10 @@
-﻿using System;
+﻿namespace Programming2Project1;
 
-public class Class1
+public class Institution(string name, string region, string country)
 {
-	public Class1()
-	{
-	}
+    public string Name { get; } = name;
+    public string Region { get; } = region;
+    public string Country { get; } = country;
 }
+
+

@@ -1,8 +1,14 @@
-﻿using System;
+﻿namespace Programming2Project1;
 
-public class Class1
+
+using System;
+using System.Collections.Generic;
+
+
+public class Department(string name, int courseid, Institution institution)
 {
-	public Class1()
-	{
-	}
+    public string Name { get; } = name;
+    public int courseID { get; set; } = courseid;
+    public Institution institution { get; } = institution;
 }
+
