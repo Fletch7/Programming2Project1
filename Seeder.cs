@@ -3,15 +3,19 @@ using System.Collections.Generic;
 
 public class Seeder
 {
-	public List<Institution> Institutions { get; } = new List<Institution>;
-	public List<Department> Departments { get; } = new List<Departments>;
-	public List<Course> Courses { get; } = new List<Courses>;
+	private List<Institution> _institution;
+	private List<Department> _departments;
+	private List<Course> _courses;
+
+	public List<Institution> Institutions { get {  return _institution; } }
+	public List<Department> Departments { get { return _departments; } }	
+	public List<Course> Courses {  get { return _courses; } }
 
 	public Seeder()
 	{
-		ListOfInstitutions();
-		ListOfDepartments();
-		ListOfCourses();
+		_institution = SeedInstitutions();
+		_departments = SeedDepartments();
+		_courses = SeedCourses();
 	}
 	
 	public static List<Institution> SeedInstitutions()
