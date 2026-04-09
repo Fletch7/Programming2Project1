@@ -1,4 +1,5 @@
-﻿using System;
+﻿namespace Programming2Project1;
+using System;
 using System.Collections.Generic;
 
 public class Seeder
@@ -7,9 +8,9 @@ public class Seeder
 	private List<Department> _departments;
 	private List<Course> _courses;
 
-	public List<Institution> Institutions { get {  return _institution; } }
-	public List<Department> Departments { get { return _departments; } }	
-	public List<Course> Courses {  get { return _courses; } }
+	public List<Institution> Institutions => _institution;
+	public List<Department> Departments => _departments;
+    public List<Course> Courses => _courses;
 
 	public Seeder()
 	{
