@@ -1,0 +1,259 @@
+. Explain the relationship between system calls, the kernel, and user applications. How
+do system calls allow user programs to request privileged operations without compro-
+mising system integrity
+
+System calls are the secure bridge between between unprivliged users and privliged OS kernel.
+
+
+Define the terms kernel mode and user mode. Why does an operating system need
+this distinction, and what happens when a user-mode program attempts a privileged
+instruction?
+
+Kernel mode is a privileged CPU execution state where the core operating system runs 
+with unrestricted access to hardware, memory, and system instructions. 
+User mode is a restricted CPU execution state where regular applications run with limited access, relying on the operating system to handle hardware and protected resources
+
+
+. Describe the concept of process isolation. How does the boundary between kernel
+space and user space contribute to both stability and security
+
+Process isolation is an operating system mechanism that gives each running process its own 
+separate virtual address space and restricted access to system resources so one process cannot 
+read or modify another's memory, state, or files without explicit permission
+
+
+You need to create a compressed tar archive of the directory “/home/student/projects”
+and save it as “project-backup.tar.gz” in the “/tmp” directory. Write the full command
+to accomplish this.
+
+tar -czvf /tmp/project-backup.tar.gz /home/student/projects
+
+
+Write the full command to extract the archive “project-backup.tar.gz” located in
+“/tmp” into the directory “/home/student/restore”.
+
+tar -xzvf /tmp/project-backup.tar.gz -C /home/student/restore
+
+Amount of free and used memory, human readable - free -h
+List all files in currect directory, incl hidden files with sizes shown - ls -lah
+Show system hostname - hostname
+Current system date, time and uptime - date && uptime
+Securely copy a file “report.txt” from your local machine to the home directory
+of user “bob” on a remote server with IP 10.0.0.25. - scp report.txt bob@10.0.0.25:~
+First 20 lines of the syslog: - head -n 20 /var/log/syslog
+
+
+xplain the difference between setting file permissions using octal notation (e.g., 640)
+versus symbolic notation (e.g., u=rw,g=r,o=). Give an example where each method
+would be the more practical choice.
+
+Octal notation overwrites all permissions at once, while symbolic notation allows each permission to be changed individually.
+
+
+A file currently has permissions “rw-r–r–”. Write a single command using symbolic
+notation to add execute permission for the owner and the group only, without altering
+the other permission bits.
+
+chmod ug+x filename
+
+
+Compare and contrast the “top” and “ps” commands for process monitoring. When
+would you choose one over the other, and what does each provide that the other does
+not?
+
+Top live refresh, top is interactive while ps is static. Use top for realtime process trending and ps when you need precise script output.
+
+
+Describe the complete sequence to run a script “worker.sh” in the background, check
+that it is running, observe its resource usage, and then terminate it gracefully. Include
+all commands in the correct order.
+
+chmod +x worker.sh
+./worker.sh &
+PID=$!
+echo $PID
+jobs -l
+ps -fp $PID
+top -p $PID
+ps -o pid,%cpu,%mem,rss,vsz,etime,stat,cmd -p $PID
+kill -SIGTERM $PID
+ps -p $PID
+jobs -l
+kill -SIGKILL $PID    # only if it ignored SIGTERM
+
+
+Explain the difference between the “SIGTERM” and “SIGKILL” signals. Why is it
+generally preferable to try “SIGTERM” first when stopping a process?
+
+SIGTERM tries to safely terminate the target process while SIGKILL immediately stops the target process regardless of what might happen.
+
+
+Name two utilities that can be used to change the scheduling priority of processes in
+Linux, and briefly explain when you might use each
+
+NICE/RENICE. Use 'nice' when setting up a new process that you know will use a lot of system resources. 'renice' would be used
+when an existing process starts to use too many resources; can change its priority in realtime.
+
+
+A process with PID 4821 is consuming excessive CPU. Write the commands you would
+use to (a) lower its scheduling priority while it is running, and (b) terminate it if that
+does not help
+
+renice -n 19 -p 4821
+confirm change - ps -o pid,ni,%cpu,cmd -p 4821
+kill -SIGTERM 4821
+ps -p 4821
+kill -SIGKILL 4821
+
+
+Write a crontab entry that executes a script “db-backup.sh” every weekday (Monday
+to Friday) at 11:45 PM and appends the output to a log file “/var/log/db-backup.log”.
+
+45 23 * * 1-5 /path/to/db-backup.sh >> /var/log/db-backup.log 2>&1
+
+
+Write a crontab entry that runs the script “cleanup.sh” on the first day of every month
+at midnight.
+
+0 0 1 * * /path/to/cleanup.sh
+
+
+Describe the process of completely removing an application, including its configuration
+files, from an Ubuntu system using apt. What commands would you use and in what
+order?
+
+sudo systemctl stop appname
+sudo systemctl disable appname
+sudo apt purge appname
+
+
+ What steps would you take to update the local package database and identify any
+dependency problems prior to upgrading the system?
+
+sudo apt update
+sudo dpkg --audit
+apt list --upgradable
+sudo apt upgrade -s
+
+
+You have written a script “deploy-app.sh” that requires execute permissions. The
+script is owned by your user and has default permissions (octal 644).
+(a) What command would you use to make it executable for the owner while pre-
+serving the existing read and write permissions?
+
+chmod u+x deploy-app.sh
+
+
+How would you run this script if it contains a shebang line specifying the inter-
+preter?
+
+/home/youruser/deploy-app.sh
+
+Write a bash script that accepts a filename as an argument and checks whether:
+• The file exists.
+• It is a regular file (not a directory).
+
+#!/bin/bash
+
+# Check that exactly one argument was supplied
+if [ $# -ne 1 ]; then
+    echo "Usage: $0 filename"
+    exit 1
+fi
+
+file="$1"
+
+# Check whether the path exists at all
+if [ ! -e "$file" ]; then
+    echo "'$file' does not exist."
+    exit 2
+fi
+
+echo "'$file' exists."
+
+# Check whether it is a regular file
+if [ -f "$file" ]; then
+    echo "'$file' is a regular file."
+elif [ -d "$file" ]; then
+    echo "'$file' is a directory, not a regular file."
+    exit 3
+else
+    echo "'$file' exists but is not a regular file (e.g. a device, socket, or symlink to one)."
+    exit 4
+fi
+
+
+ Write a bash script that accepts a directory path as an argument, verifies that the
+directory exists, and then prints the number of files it contains.
+
+#!/bin/bash
+
+# Check that exactly one argument was supplied
+if [ $# -ne 1 ]; then
+    echo "Usage: $0 directory_path"
+    exit 1
+fi
+
+dir="$1"
+
+# Verify that the path exists and is a directory
+if [ ! -d "$dir" ]; then
+    echo "Error: '$dir' does not exist or is not a directory."
+    exit 2
+fi
+
+# Count regular files directly inside the directory (not subdirectories)
+count=$(find "$dir" -maxdepth 1 -type f | wc -l)
+
+echo "Directory '$dir' contains $count file(s)."
+
+
+Describe the steps to create a new user account named “developer”, add it to the
+“sudo” group, and set a password for it. Provide the commands in the correct order.
+
+sudo adduser developer
+sudo usermod -aG sudo developer
+sudo passwd developer
+
+
+Explain the difference between “systemctl start”, “systemctl enable”, and “systemctl
+status”. When would you use each?
+
+Start starts now, not on boot and changes the runtime state. Used to start a service immediately.
+Enable starts at boot, changes boot config. Used when you want a service to persist across reboots etc.
+status shows current process status, doesn't change anything. Usesd to check if a srvice is running.
+
+
+Using the ip command, how would you add a secondary IP address 10.0.0.60/24 to
+the network interface eth0?
+
+sudo ip addr add 10.0.0.60/24 dev eth0
+
+
+Using the ip command, how would you display all configured IP addresses and the
+state of every network interface on the system?
+
+ip addr show
+
+
+What is the full path to the directory where Ubuntu 20.04+ stores its systemd-
+networkd / Netplan configuration files?
+
+/etc/netplan/
+
+
+Which iptables command would create a rule to allow established and related incoming
+connections while blocking everything else by default?
+(a) sudo iptables -A INPUT -m state –state ESTABLISHED,RELATED -j ACCEPT - sudo iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+(b) sudo iptables -P INPUT ACCEPT - 
+(c) sudo iptables -A INPUT -j ACCEPT
+(d) sudo iptables -F INPUT
+
+sudo iptables -A INPUT -i lo -j ACCEPT
+sudo iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+sudo iptables -P INPUT DROP
+
+
+
+
